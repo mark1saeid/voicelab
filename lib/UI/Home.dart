@@ -59,6 +59,7 @@ class _HomeState extends State<Home> {
  Future<void> _setupNeeds() async {
     if (widget.x == 0 || widget.x == 1) {
       List<Item> test = await getItems();
+      print(test[0].name.toString());
       setState(() {
         widget.homeItems = test;
         widget._isloading = false;
