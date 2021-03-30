@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_library/Model/itemModel.dart';
+import 'package:voice_library/Model/ItemModel.dart';
 
 
-class trendProvider extends ChangeNotifier {
+class TrendProvider extends ChangeNotifier {
   bool isloading = true;
   Map<int, bool> itemsState = new Map<int, bool>();
   List<Item> items = [];

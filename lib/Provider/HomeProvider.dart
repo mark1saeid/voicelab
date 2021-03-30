@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:voice_library/Model/itemModel.dart';
-import 'package:voice_library/Service/itemService.dart';
 
 
-class homeProvider extends ChangeNotifier {
+
+class HomeProvider extends ChangeNotifier {
  bool isloading = true;
  Map<int, bool> itemsState = new Map<int, bool>();
 

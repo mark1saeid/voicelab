@@ -1,66 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_riverpod/all.dart';
-import 'package:voice_library/Model/itemModel.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:voice_library/Model/ItemModel.dart';
 
-import 'package:voice_library/Provider/homeProvider.dart';
-import 'package:voice_library/Service/itemService.dart';
-import 'package:voice_library/Widgets/itemWidget.dart';
+import 'package:voice_library/Provider/HomeProvider.dart';
+import 'package:voice_library/Service/ItemService.dart';
+import 'package:voice_library/Widgets/ItemWidget.dart';
+
+class Home extends StatefulWidget {
+  List<Item> homeItems = [];
+  bool _isloading = true;
+  final homeProvider =
+  ChangeNotifierProvider<HomeProvider>((ref) => HomeProvider());
+
+  int x = 0;
+  int y = 0;
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+    _setupNeeds();
+  }
 
 
-
-
-
-class Home extends StatelessWidget {
-  final homeprovide =
-      ChangeNotifierProvider<homeProvider>((ref) => homeProvider());
-  List<Item> homeitem = [];
-
-  itemService service = new itemService();
-
-  Home({
-     final Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("Home " + "${widget.x++}");
+
     return Scaffold(
-      body: Container(
-          child: Padding(
+      body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
         child: RefreshIndicator(
-          color: Colors.black,
-          onRefresh: () => _setupNeeds(),
-          child: FutureBuilder<List<Item>>(
-              future: itemService.getItems() ,
-              builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Text('Loading....');
-              default:
-                if (snapshot.hasError)
-                  return Text('Error: ${snapshot.error}');
-                else
-                  return ListView.builder(
-                      physics: BouncingScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
-                      itemCount: snapshot.data.length ?? 0,
-                      itemBuilder: (ctx, index) {
-                        return ItemWidget(provider: homeprovide,id: index,item: snapshot.data[index],);
-                      //  snapshot.data[index], index, homeprovide
-                      });
-            }
-          }),
-        ),
-      )),
+            color: Colors.black,
+            onRefresh: () => _setupNeeds(),
+            child: widget._isloading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.builder(
+                    physics: BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    itemCount: widget.homeItems.length,
+                    itemBuilder: (ctx, index) {
+                      return ItemWidget(
+                        provider: widget.homeProvider,
+                        id: index,
+                        item: widget.homeItems[index],
+                      );
+                    })),
+      ),
     );
   }
 
   _setupNeeds() async {
-    List<Item> test;
-    test = await itemService.getItems();
-   // setState(() {
-    //  homeitem = test;
-  //  });
+    if (widget.x == 0 || widget.x == 1) {
+      List<Item> test = await getItems();
+      setState(() {
+        widget.homeItems = test;
+        widget._isloading = false;
+      });
+    }
   }
 }

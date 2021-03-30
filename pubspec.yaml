@@ -19,7 +19,6 @@ dependencies:
   firebase_database: "^6.0.0"
   cloud_firestore: ^1.0.3
 
-  assets_audio_player_web: ^3.0.3+2
 
   path_provider: ^2.0.1
   flutter_cache_manager: ^2.1.2

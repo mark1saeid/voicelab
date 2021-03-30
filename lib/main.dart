@@ -11,10 +11,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_dialogs/material_dialogs.dart';
-import 'package:material_dialogs/widgets/buttons/icon_button.dart';
+
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:voice_library/Provider/PanalProvider.dart';
 import 'package:voice_library/UI/Favorite.dart';
@@ -135,7 +134,7 @@ key: _scaffoldKey,
                       child: Material(
                         elevation: 2.0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                            borderRadius:  BorderRadius.circular(30.0)),
                         shadowColor: Colors.black,
                         child: TextField(
                           textAlignVertical: TextAlignVertical.bottom,

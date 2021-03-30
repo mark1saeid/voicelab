@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 class Item {
-   String name;
-   String voiceUrl;
-   int nShare;
+  final String name;
+  final String voiceUrl;
+  final int nShare;
 
   Item({
     this.name,
