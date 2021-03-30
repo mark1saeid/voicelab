@@ -9,10 +9,10 @@ import 'package:voice_library/Model/ItemModel.dart';
         .child("voice");
     List<Item> items=[];
     itemsSnapshot.once().then((DataSnapshot snapshot) async {
-    Map<dynamic,dynamic> valuese =  snapshot.value;
+    Map<dynamic,dynamic> valuese = snapshot.value as Map<dynamic,dynamic>;
     valuese.forEach((key, values) {
      if(values!= null){
-       items.add(Item(name: values['name'].toString(),voiceUrl:values['voiceUrl'].toString() ,nShare:values['nShare'] ));
+       items.add(Item(name: values['name'].toString(),voiceUrl:values['voiceUrl'].toString() ,nShare: int.parse(snapshot.value["nShare"].toString())));
      }
     });
     });

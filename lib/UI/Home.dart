@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  _setupNeeds() async {
+ Future<void> _setupNeeds() async {
     if (widget.x == 0 || widget.x == 1) {
       List<Item> test = await getItems();
       setState(() {

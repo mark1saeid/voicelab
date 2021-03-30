@@ -11,9 +11,9 @@ class Item {
   });
 
   Item.fromSnapshot(DataSnapshot snapshot) :
-        name = snapshot.value["name"],
-        voiceUrl = snapshot.value["voiceUrl"],
-        nShare = snapshot.value["nShare"];
+        name = snapshot.value["name"].toString(),
+        voiceUrl = snapshot.value["voiceUrl"].toString(),
+        nShare = int.parse(snapshot.value["nShare"].toString());
 
 
 

@@ -12,9 +12,9 @@ import 'package:voice_library/Model/ItemModel.dart';
 
 
 class ItemWidget extends StatefulWidget {
-  Item item;
-  int id;
-  var provider;
+ final Item item;
+ final int id;
+ final ProviderBase<Object, dynamic> provider;
   int finalduration;
   int curantduration;
 
@@ -33,8 +33,8 @@ class _ItemWidgetState extends State<ItemWidget> {
 
   _downloadAudio(url,key) async {
     final cache =  DefaultCacheManager();
-    final file  = await cache.getSingleFile(url,key: key);
-    cache.putFile(url, file.readAsBytesSync());
+    final file  = await cache.getSingleFile(url.toString(),key: key.toString());
+    cache.putFile(url.toString(), file.readAsBytesSync());
     print(file.path.toString());
   }
 
@@ -52,12 +52,15 @@ class _ItemWidgetState extends State<ItemWidget> {
       child: ListTile(
         leading: GestureDetector(
           child: Consumer(
-              builder: (context, watch, child) => Icon(
-                    watch(widget.provider).getitemstate(widget.id) ?? false == true
-                        ? Icons.pause_circle_filled
-                        : Icons.play_circle_fill,
-                    size: 50,
-                  )),
+              builder: (context, watch, child) {
+              bool buttonState =  watch(widget.provider).getitemstate(widget.id) as bool;
+             return Icon(
+              buttonState ?? false == true
+              ? Icons.pause_circle_filled
+                  : Icons.play_circle_fill,
+              size: 50,
+              );
+              }),
           onTap: () async {
             if (context.read(widget.provider).getitemstate(widget.id) == true) {
               await audioPlayer.stop();
