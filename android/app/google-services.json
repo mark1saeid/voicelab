@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "876437487573",
+    "project_id": "audio1lab",
+    "storage_bucket": "audio1lab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:876437487573:android:304f94eda320f00ef1875c",
+        "android_client_info": {
+          "package_name": "com.troy.voice_library"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "876437487573-jd4o7r6423flsoj61pqichdacmnq3l24.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtlln9YmUhr7Aj22APEbIwvjT6zvD008o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "876437487573-jd4o7r6423flsoj61pqichdacmnq3l24.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
