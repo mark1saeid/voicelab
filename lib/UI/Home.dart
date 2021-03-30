@@ -10,8 +10,7 @@ import 'package:voice_library/Widgets/ItemWidget.dart';
 class Home extends StatefulWidget {
   List<Item> homeItems = [];
   bool _isloading = true;
-  final homeProvider =
-  ChangeNotifierProvider<HomeProvider>((ref) => HomeProvider());
+  final homeProvider = ChangeNotifierProvider<HomeProvider>((ref) => HomeProvider());
 
   int x = 0;
   int y = 0;
@@ -30,7 +29,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    print("Home " + "${widget.x++}");
+    print("Home " +"${widget.x++}");
 
     return Scaffold(
       body: Padding(

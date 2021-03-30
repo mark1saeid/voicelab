@@ -12,7 +12,7 @@ import 'package:voice_library/Model/ItemModel.dart';
     Map<dynamic,dynamic> valuese = snapshot.value as Map<dynamic,dynamic>;
     valuese.forEach((key, values) {
      if(values!= null){
-       items.add(Item(name: values['name'].toString(),voiceUrl:values['voiceUrl'].toString() ,nShare: int.parse(snapshot.value["nShare"].toString())));
+       items.add(new Item(name: values['name'].toString(),voiceUrl:values['voiceUrl'].toString() ,nShare: snapshot.value["nShare"] as int));
      }
     });
     });
