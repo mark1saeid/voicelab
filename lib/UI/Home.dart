@@ -14,10 +14,10 @@ class Home extends HookWidget {
 
 
   int x = 0;
-  int y = 0;
 
   @override
   Widget build(BuildContext context) {
+    int y = 0;
     final  future = useMemoized(() async {
       List<Item> item = await getItems();
      return item;
