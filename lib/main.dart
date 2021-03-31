@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       length: 3,
       initialIndex: 1,
       child: Scaffold(
-key: _scaffoldKey,
+      key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,

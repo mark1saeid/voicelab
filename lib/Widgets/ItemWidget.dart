@@ -1,10 +1,5 @@
-
-
-
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:marquee/marquee.dart';
 import 'package:voice_library/Model/ItemModel.dart';
@@ -30,21 +25,20 @@ class ItemWidget extends StatefulWidget {
 
 class _ItemWidgetState extends State<ItemWidget> {
 
-  int x=0;
 
-  _downloadAudio(url,key) async {
+  /*_downloadAudio(url,key) async {
     final cache =  DefaultCacheManager();
     final file  = await cache.getSingleFile(url.toString(),key: key.toString());
     cache.putFile(url.toString(), file.readAsBytesSync());
     print(file.path.toString());
-  }
+  }*/
 
 
 
 
   @override
   Widget build(BuildContext context) {
-    print("item builded "+"${x++}");
+
 
 
     AudioPlayer audioPlayer = AudioPlayer(playerId: widget.id.toString()+ widget.item.name,);
