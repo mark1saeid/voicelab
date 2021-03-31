@@ -30,6 +30,7 @@ class ItemWidget extends StatefulWidget {
 
 class _ItemWidgetState extends State<ItemWidget> {
 
+  int x=0;
 
   _downloadAudio(url,key) async {
     final cache =  DefaultCacheManager();
@@ -43,6 +44,9 @@ class _ItemWidgetState extends State<ItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print("item builded "+"${x++}");
+
+
     AudioPlayer audioPlayer = AudioPlayer(playerId: widget.id.toString()+ widget.item.name,);
     return Card(
       color: Colors.white,
@@ -53,9 +57,9 @@ class _ItemWidgetState extends State<ItemWidget> {
         leading: GestureDetector(
           child: Consumer(
               builder: (context, watch, child) {
-              bool buttonState =  watch(widget.provider).getitemstate(widget.id) as bool;
+              bool buttonState = ( watch(widget.provider).getitemstate(widget.id) ?? false )as bool;
              return Icon(
-              buttonState ?? false == true
+              buttonState
               ? Icons.pause_circle_filled
                   : Icons.play_circle_fill,
               size: 50,
@@ -103,7 +107,7 @@ class _ItemWidgetState extends State<ItemWidget> {
                       return LinearProgressIndicator(
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Colors.black),
-                          backgroundColor: Colors.white,
+                          backgroundColor: Colors.black12,
                           value: (widget.curantduration / widget.finalduration));
                     },
                   )),
