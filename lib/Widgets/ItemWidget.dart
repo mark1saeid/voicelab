@@ -134,7 +134,7 @@ class _ItemWidgetState extends State<ItemWidget> {
   void dispose() {
     AudioPlayer audioPlayer = AudioPlayer(playerId: widget.id.toString()+ widget.item.name);
     audioPlayer.dispose();
-
+  //  context.read(widget.provider).setitemstateFalse(widget.id);
     super.dispose();
   }
 }

@@ -22,6 +22,7 @@ class HomeProvider extends ChangeNotifier {
  }
 
 
+
  getitemstate(int id) {
    return itemsState[id];
  }

@@ -4,23 +4,20 @@ import 'package:voice_library/Model/ItemModel.dart';
 
 
  Future<List<Item>> getItems() async {
-   List<Item> items =[];
-  Query itemsSnapshot = FirebaseDatabase.instance
-      .reference()
-      .child("voice");
+  final databaseReference = FirebaseDatabase.instance.reference().child("voice");
+  List<Item> items = [];
+  databaseReference.once().then((value) {
+    Map data = value.value as Map;
+    data.forEach((index, data) {
+      Item item = Item(name: data['name'].toString(),
+          voiceUrl: data['voiceUrl'].toString(),
+          nShare: data["nShare"] as int);
+      items.add(item);
+    }
+    );
 
-  itemsSnapshot.once().then((DataSnapshot snapshot) async {
-    Map<dynamic, dynamic> snapshotValue = snapshot.value as Map<dynamic, dynamic>;
-    snapshotValue.forEach((key, value) {
-      if (value != null) {
-        Item item = Item(name: value['name'].toString(),
-            voiceUrl: value['voiceUrl'].toString(),
-            nShare: value["nShare"] as int);
-
-        items.add(item);
-
-      }
-    });
   });
-  return items;
+
+   return items;
 }
+
