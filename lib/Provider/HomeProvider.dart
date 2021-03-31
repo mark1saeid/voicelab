@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:voice_library/Model/ItemModel.dart';
 
 
 
 class HomeProvider extends ChangeNotifier {
  bool isloading = true;
+ List<Item> item = [];
  Map<int, bool> itemsState = new Map<int, bool>();
 
 
@@ -29,7 +31,8 @@ class HomeProvider extends ChangeNotifier {
    isloading = false;
    notifyListeners();
  }
-getisloading(){
-   return isloading;
-}
+ setlist(List<Item> newList){
+   item = newList;
+   notifyListeners();
+ }
 }

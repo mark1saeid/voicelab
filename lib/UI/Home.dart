@@ -8,8 +8,8 @@ import 'package:voice_library/Service/ItemService.dart';
 import 'package:voice_library/Widgets/ItemWidget.dart';
 
 class Home extends StatefulWidget {
-  List<Item> homeItems = [];
-  bool _isloading = true;
+//  List<Item> homeItems = [];
+//  bool _isloading = true;
   final homeProvider = ChangeNotifierProvider<HomeProvider>((ref) => HomeProvider());
 
   int x = 0;
@@ -30,40 +30,39 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     print("Home " +"${widget.x++}");
-
+   // print(widget.homeItems.length.toString());
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
         child: RefreshIndicator(
             color: Colors.black,
             onRefresh: () => _setupNeeds(),
-            child: widget._isloading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : ListView.builder(
-                    physics: BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics()),
-                    itemCount: widget.homeItems.length,
-                    itemBuilder: (ctx, index) {
-                      return ItemWidget(
-                        provider: widget.homeProvider,
-                        id: index,
-                        item: widget.homeItems[index],
-                      );
-                    })),
+            child: Consumer(
+              builder:(context,watch,child) =>ListView.builder(
+                      physics: BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
+                      itemCount: watch(widget.homeProvider).item.length,
+                      itemBuilder: (ctx, index) {
+                        return ItemWidget(
+                          provider: widget.homeProvider,
+                          id: index,
+                          item: watch(widget.homeProvider).item[index],
+                        );
+                      }),
+            )),
       ),
     );
   }
 
  Future<void> _setupNeeds() async {
-    if (widget.x == 0 || widget.x == 1) {
       List<Item> test = await getItems();
-      print(test[0].name.toString());
-      setState(() {
-        widget.homeItems = test;
-        widget._isloading = false;
-      });
-    }
+   context.read(widget.homeProvider).setlist(test);
+
   }
 }
+/*
+widget._isloading
+? Padding(
+padding: const EdgeInsets.all(100),
+child: CircularProgressIndicator(),
+)*/

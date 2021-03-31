@@ -1,8 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 class Item {
-  final String name;
-  final String voiceUrl;
-  final int nShare;
+   String name;
+   String voiceUrl;
+   int nShare;
 
   Item({
     this.name,
@@ -10,10 +10,10 @@ class Item {
     this.nShare
   });
 
-  Item.fromSnapshot(DataSnapshot snapshot) :
-        name = snapshot.value["name"] as String,
-        voiceUrl = snapshot.value["voiceUrl"] as String,
-        nShare = snapshot.value["nShare"] as int;
+  Item.fromSnapshot(Map<dynamic,dynamic> snapshot) :
+        name = snapshot["name"] as String,
+        voiceUrl = snapshot["voiceUrl"] as String,
+        nShare = snapshot["nShare"] as int;
 
 
 
