@@ -54,19 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final navigatorKey = GlobalKey<NavigatorState>();
   final databaseRef = FirebaseDatabase.instance.reference();
 
-  Future uploadFile() async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-    Reference ref = storage.ref().child("voice" + file.name);
-    UploadTask uploadTask = ref.putFile(File(file.path));
-    uploadTask.then((res) async {
-      res.ref.getDownloadURL();
-      databaseRef.child("voice").push().set({
-        'name': file.name,
-        'voiceUrl': await res.ref.getDownloadURL(),
-        'nShare': 0
-      });
-    });
-  }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   FilePickerResult result;
   PlatformFile file;
@@ -105,82 +92,38 @@ class _MyHomePageState extends State<MyHomePage> {
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Padding(
-            padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
-            child: Row(
-              children: [
-                SizedBox(
-                    width: MediaQuery.of(context).size.width / 3.3,
-                    child: AnimatedTextKit(
-                      animatedTexts: [
-                        ColorizeAnimatedText(
-                          'Voice Lab',
-                          textStyle: colorizeTextStyle,
-                          colors: colorizeColors,
+            padding: const EdgeInsets.only(left: 5, top: 20, right: 5),
+            child: ListTile(
+              title:  SizedBox(
+                  width: MediaQuery.of(context).size.width / 3.3,
+                  child: AnimatedTextKit(
+                    totalRepeatCount: 1,
+                    animatedTexts: [
+                      ColorizeAnimatedText(
+                        'voicelab',
+                        textStyle: colorizeTextStyle,
+                        colors: colorizeColors,
 
-                        ),
-                      ],
-                      isRepeatingAnimation: true,
-                      onTap: () {
-                        print("Tap Event");
-                      },
-                    )),
-                Padding(
-                  padding: const EdgeInsets.only(left: 35),
-                  child: Container(
-                    height: 30,
-                    width: MediaQuery.of(context).size.width / 2.2,
-                    child: Center(
-                      child: Material(
-                        elevation: 2.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:  BorderRadius.circular(30.0)),
-                        shadowColor: Colors.black,
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.bottom,
-                          textAlign: TextAlign.start,
-                          cursorHeight: 20,
-                          cursorColor: Colors.transparent,
-                          autofocus: false,
-                          decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.search_rounded,
-                                color: Colors.black,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(30.0),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width: 2.0,
-                                ),
-                              ),
-                              filled: true,
-                              hintStyle: TextStyle(color: Colors.grey[800]),
-                              hintText: "Search",
-                              fillColor: Colors.white70),
-                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ],
+                    ],
+                    isRepeatingAnimation: true,
+                    onTap: () {
+                      print("Tap Event");
+                    },
+                  )),
+              trailing:
+                  GestureDetector(child: Icon(Icons.arrow_circle_up_rounded,color: Colors.black,size: 26,)
+                  ,onTap: (){
+
+                    _selectVoice();
+
+                    },),
+
+
             ),
           ),
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(60),
+            preferredSize: const Size.fromHeight(50),
             child: Column(
               children: [
                 Container(
@@ -229,8 +172,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Consumer(
           builder: (context, watch, child) => SlidingUpPanel(
+            maxHeight: MediaQuery.of(context).size.height/2,
             minHeight: 60,
-            margin: const EdgeInsets.only(left: 10, right: 10),
+            margin: const EdgeInsets.only(left: 0, right: 0),
             borderRadius: radius,
             controller: _pc,
             defaultPanelState: PanelState.CLOSED,
@@ -249,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       size: 25,
                     ),
                     Text(
-                      "Upload Your Voice Now",
+                      "contol",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 14,
@@ -267,44 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     _absolutePathOfAudio == null
                         ? Container()
                         : Text(_absolutePathOfAudio),
-                    RaisedButton(
-                      color: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                      child: Text(
-                        "Select",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () async {
-                        result = await FilePicker.platform.pickFiles(
-                          type: FileType.custom,
-                          allowedExtensions: ['m4a', 'mp3', 'wav'],
-                        );
-                        if (result != null) {
-                          file = result.files.first;
 
-                          print(file.name);
-                          print(file.bytes);
-                          print(file.size);
-                          print(file.extension);
-                          print(file.path);
-                        } else {
-                          // User canceled the picker
-                        }
-                      },
-                    ),
-                    RaisedButton(
-                      color: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                      child: Text(
-                        "Upload",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () async {
-                        uploadFile();
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -318,24 +225,40 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-        floatingActionButton: Consumer(
-          builder: (context, watch, child) => FloatingActionButton(
-            onPressed: () {
-              if (watch(panelstate).getPanalState() == true) {
-                watch(panelstate).setPanalStatefalse();
-                _pc.hide();
-                print("${watch(panelstate).getPanalState()}");
-              } else {
-                watch(panelstate).setPanalStatetrue();
-                _pc.show();
-                print("${watch(panelstate).getPanalState()}");
-              }
-            },
-            child: const Icon(Icons.music_note),
-            backgroundColor: Colors.black,
-          ),
-        ),
+
       ),
     );
   }
+  _selectVoice() async {
+    result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['m4a', 'mp3', 'wav'],
+    );
+    if (result != null) {
+      file = result.files.first;
+
+      print(file.name);
+      print(file.bytes);
+      print(file.size);
+      print(file.extension);
+      print(file.path);
+      _uploadVoice();
+    } else {
+      // User canceled the picker
+    }
+  }
+   _uploadVoice() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child("voice" + file.name);
+    UploadTask uploadTask = ref.putFile(File(file.path));
+    uploadTask.then((res) async {
+      res.ref.getDownloadURL();
+      databaseRef.child("voice").push().set({
+        'name': file.name,
+        'voiceUrl': await res.ref.getDownloadURL(),
+        'nShare': 0
+      });
+    });
+  }
+
 }
