@@ -26,6 +26,7 @@ dependencies:
   animated_text_kit: ^4.1.1
   file_picker: ^3.0.0
   marquee: ^2.0.0
+  toast: ^0.1.5
   flutter:
     sdk: flutter
 

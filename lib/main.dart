@@ -15,6 +15,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:toast/toast.dart';
+import 'package:voice_library/Provider/MainProvider.dart';
 import 'package:voice_library/Provider/PanalProvider.dart';
 import 'package:voice_library/UI/Favorite.dart';
 import 'package:voice_library/UI/Home.dart';
@@ -25,7 +27,6 @@ void main() async {
   await Firebase.initializeApp();
   runApp(ProviderScope(child: MyApp()));
 }
-
 
 class MyApp extends StatelessWidget {
   @override
@@ -69,6 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
   PanelController _pc = new PanelController();
   final panelstate =
       ChangeNotifierProvider<PanelProvider>((ref) => PanelProvider());
+  final mainProvider =
+      ChangeNotifierProvider<MainProvider>((ref) => MainProvider());
 
   @override
   void initState() {
@@ -86,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
       length: 3,
       initialIndex: 1,
       child: Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -94,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Padding(
             padding: const EdgeInsets.only(left: 5, top: 20, right: 5),
             child: ListTile(
-              title:  SizedBox(
+              title: SizedBox(
                   width: MediaQuery.of(context).size.width / 3.3,
                   child: AnimatedTextKit(
                     totalRepeatCount: 1,
@@ -103,7 +106,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         'voicelab',
                         textStyle: colorizeTextStyle,
                         colors: colorizeColors,
-
                       ),
                     ],
                     isRepeatingAnimation: true,
@@ -111,15 +113,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       print("Tap Event");
                     },
                   )),
-              trailing:
-                  GestureDetector(child: Icon(Icons.arrow_circle_up_rounded,color: Colors.black,size: 26,)
-                  ,onTap: (){
-
-                    _selectVoice();
-
-                    },),
-
-
+              trailing: GestureDetector(
+                child: Consumer(
+                    builder:(context,watch,child) {
+                bool state = watch(mainProvider).uploadingState ?? false;
+                    return state? Container(
+                      height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.black),strokeWidth: 2,)): Icon(
+                      Icons.arrow_circle_up_rounded,
+                      color: Colors.black,
+                      size: 26,
+                    );
+                    }),
+                onTap: () {
+                  _selectVoice();
+                },
+              ),
             ),
           ),
           bottom: PreferredSize(
@@ -172,8 +182,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Consumer(
           builder: (context, watch, child) => SlidingUpPanel(
-            maxHeight: MediaQuery.of(context).size.height/2,
-            minHeight: 60,
+            maxHeight: MediaQuery.of(context).size.height / 2,
+            minHeight: MediaQuery.of(context).size.height / 12,
             margin: const EdgeInsets.only(left: 0, right: 0),
             borderRadius: radius,
             controller: _pc,
@@ -185,21 +195,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0),
                   )),
-              child: Center(
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.arrow_drop_up_rounded,
-                      size: 25,
-                    ),
-                    Text(
-                      "contol",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.arrow_drop_up_rounded,
+                        size: 25,
+                      ),
+                      Text(
+                        "contol",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -211,7 +224,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     _absolutePathOfAudio == null
                         ? Container()
                         : Text(_absolutePathOfAudio),
-
                   ],
                 ),
               ),
@@ -225,10 +237,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-
       ),
     );
   }
+
   _selectVoice() async {
     result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -247,7 +259,17 @@ class _MyHomePageState extends State<MyHomePage> {
       // User canceled the picker
     }
   }
-   _uploadVoice() async {
+
+  _uploadVoice() async {
+    Toast.show(
+      "uploading",
+      context,
+      duration: Toast.LENGTH_SHORT,
+      gravity: Toast.BOTTOM,
+      textColor: Colors.white,
+      backgroundColor: Colors.black,
+    );
+    context.read(mainProvider).setPanalStatetrue();
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref = storage.ref().child("voice" + file.name);
     UploadTask uploadTask = ref.putFile(File(file.path));
@@ -259,6 +281,27 @@ class _MyHomePageState extends State<MyHomePage> {
         'nShare': 0
       });
     });
+    uploadTask.whenComplete(() {
+      Toast.show(
+        "uploaded",
+        context,
+        duration: Toast.LENGTH_SHORT,
+        gravity: Toast.BOTTOM,
+        textColor: Colors.white,
+        backgroundColor: Colors.black,
+      );
+      context.read(mainProvider).setPanalStatefalse();
+    });
+    uploadTask.catchError(() {
+      context.read(mainProvider).setPanalStatefalse();
+      Toast.show(
+        "Erorr",
+        context,
+        duration: Toast.LENGTH_SHORT,
+        gravity: Toast.BOTTOM,
+        textColor: Colors.white,
+        backgroundColor: Colors.black,
+      );
+    });
   }
-
 }
