@@ -1,18 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainProvider extends ChangeNotifier {
-  bool uploadingState=false;
+  bool uploadingState = false;
 
-  setPanalStatefalse(){
+  void setPanalStatefalse() {
     uploadingState = false;
     notifyListeners();
   }
 
-  setPanalStatetrue(){
+  void setPanalStatetrue() {
     uploadingState = true;
     notifyListeners();
   }
-
-
 }

@@ -9,33 +9,30 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  bubble_tab_indicator: "^0.1.4"
-  audioplayers: ^0.18.1
-  sliding_up_panel: ^1.0.2
-  material_dialogs: ^1.0.0
-  flutter_riverpod: ^0.13.1+1
-  firebase_core: ^1.0.0
-  firebase_storage: ^8.0.0
-  firebase_database: "^6.0.0"
-  cloud_firestore: ^1.0.3
-  flutter_hooks: ^0.16.0
-
-  path_provider: ^2.0.1
-  flutter_cache_manager: ^2.1.2
-
   animated_text_kit: ^4.1.1
+  audioplayers: ^0.18.3
+  bubble_tab_indicator: "^0.1.4"
+  cloud_firestore: ^1.0.3
+  cupertino_icons: ^1.0.2
   file_picker: ^3.0.0
-  marquee: ^2.0.0
-  toast: ^0.1.5
+  firebase_core: ^1.0.0
+  firebase_database: "^6.0.0"
+  firebase_storage: ^8.0.0
   flutter:
     sdk: flutter
+  flutter_cache_manager: ^2.1.2
+  marquee: ^2.0.0
+  path_provider: ^2.0.1
+  provider:
+  sliding_up_panel: ^1.0.2
+  toast: ^0.1.5
 
-  cupertino_icons: ^1.0.2
+
 
 dev_dependencies:
-  lint: ^1.0.0
   flutter_test:
     sdk: flutter
+  lint: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
