@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:voice_library/model/item_model.dart';
+import 'package:http/http.dart' as http;
 
 Future<List<Item>> getItems() async {
-  final databaseReference =
-      FirebaseDatabase.instance.reference().child("voice");
-  final data = await databaseReference.once();
+ // final databaseReference =
+ //     FirebaseDatabase.instance.reference().child("voice");
+ // final data = await databaseReference.once();
 
-  final res = data.value as Map<dynamic, dynamic>;
+  final url = Uri.parse('https://audio1lab-default-rtdb.firebaseio.com/voice.json?');
+  final response = await http.get(url);
+  final data = jsonDecode(response.body);
+
+
+  final res = data as Map<dynamic, dynamic>;
   final resData = <Item>[];
   res.forEach((key, value) => resData.add(Item.fromMap(value, key.toString())));
   return resData;

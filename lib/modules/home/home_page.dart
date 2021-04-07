@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:voice_library/config/styles.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
@@ -18,6 +19,7 @@ import 'package:voice_library/config/colors.dart';
 import 'package:voice_library/provider/main_proivder.dart';
 import 'package:voice_library/provider/panel_provider.dart';
 import 'package:voice_library/widgets/loading.dart';
+import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -29,9 +31,10 @@ class _MyHomePageState extends State<MyHomePage>
   TabController tabContoller;
   final databaseRef = FirebaseDatabase.instance.reference();
 
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   FilePickerResult result;
-  PlatformFile file;
+  Uint8List  file;
 
   final _pc = PanelController();
 
@@ -157,7 +160,9 @@ class _MyHomePageState extends State<MyHomePage>
                             Icon(Icons.skip_next_rounded,size: 50,)
                           ],
                         ),
-                        const Icon(Icons.share_rounded,size: 30)
+                        GestureDetector(onTap: () {
+                       getData();
+                        },child:const Icon(Icons.share_rounded,size: 30))
                       ]
                     ),
                   ),
@@ -206,19 +211,18 @@ class _MyHomePageState extends State<MyHomePage>
       allowedExtensions: ['m4a', 'mp3', 'wav'],
     );
     if (result != null) {
-      file = result.files.first;
-      print(file.name);
-      print(file.bytes);
-      print(file.size);
-      print(file.extension);
-      print(file.path);
-      _uploadVoice();
+      file = result.files.single.bytes;
+   final  PlatformFile files = result.files.single;
+
+    //  print(file.name);
+    //  print(file.path);
+      _uploadVoice(files.name);
     } else {
       // User canceled the picker
     }
   }
 
-  Future<void> _uploadVoice() async {
+  Future<void> _uploadVoice(String name) async {
     Toast.show(
       "uploading",
       context,
@@ -230,15 +234,27 @@ class _MyHomePageState extends State<MyHomePage>
     final mainProvider = Provider.of<MainProvider>(context, listen: false);
     mainProvider.setPanalStatetrue();
     final storage = FirebaseStorage.instance;
-    final ref = storage.ref().child("voice${file.name}");
-    final uploadTask = ref.putFile(File(file.path));
+    final ref = storage.ref().child("voice$name");
+    final uploadTask = ref.putData(file);
     final res = await uploadTask;
     res.ref.getDownloadURL();
-    databaseRef.child("voice").push().set({
+
+
+    final url = Uri.parse('https://audio1lab-default-rtdb.firebaseio.com/voice.json');
+    await http.post(url,body: json.encode({
+      'name': name,
+      'voiceUrl': await res.ref.getDownloadURL(),
+      'nShare': 0
+    }));
+
+
+
+
+  /* databaseRef.child("voice").push().set({
       'name': file.name,
       'voiceUrl': await res.ref.getDownloadURL(),
       'nShare': 0
-    });
+    });*/
     uploadTask.whenComplete(() {
       Toast.show(
         "uploaded",
@@ -260,4 +276,17 @@ class _MyHomePageState extends State<MyHomePage>
       );
     });
   }
+  Future getData() async {
+    try {
+      final url = Uri.parse('https://audio1lab-default-rtdb.firebaseio.com/voice.json?');
+      final response = await http.get(url);
+      final data = jsonDecode(response.body);
+      print(data);
+      return data;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
 }
